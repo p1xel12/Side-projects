@@ -16,6 +16,9 @@ typedef struct {
 
 list_t list_init() {
     list_t list = (list_t)calloc(1, sizeof(*list));
+
+    list->first = NULL;
+
     return list;
 }
 
@@ -59,12 +62,15 @@ void list_remove_elem(list_t list, int idx) {
 
 }
 
+void list_set_elem(list_t list, int idx, void *val) {
+    list_get_elem_struct(list, idx)->val = val;
+}
+
 void free_list(list_t list) {
     list_elem_t ptr = list->first;
 
     while (ptr != NULL) {
         list_elem_t next = ptr->next;
-        free(ptr->val);
         free(ptr);
         ptr = next;
     }
