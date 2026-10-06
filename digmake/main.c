@@ -1,12 +1,12 @@
 #include <string.h>
-#include <math.h>
 #include "../alexgl/alexgl.h"
 #include "mesh.h"
 #include "../alexinput.h"
+#include "../alexobj.h"
 
 agl_context_t agl;
 
-mesh_t mesh;
+mesh_t teapot;
 
 int yRot = 0;
 
@@ -16,8 +16,8 @@ void vertex_shader(agl_context_t ctx, int i, vec2_t *pos) {
     apos = rot3y(apos, deg_to_rad(yRot));
 
     *pos = (vec2_t) {
-        .x = (apos.x / 2.0f) / (apos.z + 4.0f),
-        .y = apos.y / (apos.z + 4.0f)
+        .x = (apos.x / 2.0f) / (apos.z + 4.5f),
+        .y = (apos.y - 1.5f) / (apos.z + 4.5f)
     };
 }
 
@@ -28,101 +28,8 @@ void fragment_shader(agl_context_t ctx, color_t *col) {
 int main() {
     agl = agl_start(80, 40);
 
-    vec3_t verts[] = {
-        {
-            .x = 0.75f,
-            .y = -0.75f,
-            .z = 0.75f
-        },
-        {
-            .x = 0.75f,
-            .y = 0.75f,
-            .z = 0.75f
-        },
-        {
-            .x = -0.75f,
-            .y = 0.75f,
-            .z = 0.75f
-        },
-        {
-            .x = -0.75f,
-            .y = -0.75f,
-            .z = 0.75f
-        },
-
-        {
-            .x = -0.75f,
-            .y = -0.75f,
-            .z = -0.75f
-        },
-        {
-            .x = -0.75f,
-            .y = 0.75f,
-            .z = -0.75f
-        },
-        {
-            .x = 0.75f,
-            .y = 0.75f,
-            .z = -0.75f
-        },
-        {
-            .x = 0.75f,
-            .y = -0.75f,
-            .z = -0.75f
-        },
-
-        {
-            .x = -0.75f,
-            .y = -0.75f,
-            .z = 0.75f
-        },
-        {
-            .x = -0.75f,
-            .y = 0.75f,
-            .z = 0.75f
-        },
-        {
-            .x = -0.75f,
-            .y = 0.75f,
-            .z = -0.75f
-        },
-        {
-            .x = -0.75f,
-            .y = -0.75f,
-            .z = -0.75f
-        },
-
-        {
-            .x = 0.75f,
-            .y = -0.75f,
-            .z = -0.75f
-        },
-        {
-            .x = 0.75f,
-            .y = 0.75f,
-            .z = -0.75f
-        },
-        {
-            .x = 0.75f,
-            .y = 0.75f,
-            .z = 0.75f
-        },
-        {
-            .x = 0.75f,
-            .y = -0.75f,
-            .z = 0.75f
-        }
-    };
-
-    int inds[] = {
-        0, 1, 2, 2, 3, 0,
-        4, 5, 6, 6, 7, 4,
-        8, 9, 10, 10, 11, 8,
-        12, 13, 14, 14, 15, 12
-    };
-
     int shader = agl_create_shader(agl, vertex_shader, fragment_shader);
-    mesh = mesh_init(agl, verts, 16, inds, 24, shader);
+    teapot = load_from_obj(agl, "utah_teapot.obj", shader);
 
     input_state_t input = start_input();
 
@@ -134,11 +41,12 @@ int main() {
         if (input->keyboard[ARROW_LEFT])
             yRot += 5;
 
-        memset(agl->buf->data, 0, 3200*sizeof(color_t));
-        render_mesh(agl, mesh);
+        memset(agl->buf->data, 0, agl->buf->width*agl->buf->height*sizeof(color_t));
+        render_mesh(agl, teapot);
 
         draw_buffer(agl->buf);
     }
 
+    free_obj_mesh(agl, teapot);
     end_input(input);
 }

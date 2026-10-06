@@ -79,6 +79,11 @@ AGLAPI(create_pointer, int, enum AGL_POINTER_TYPE type, void *data, size_t len) 
     return ctx->pointers->len-1;
 }
 
+AGLAPI(destroy_pointer, void, int idx) {
+    free(list_get_elem(ctx->pointers, idx));
+    list_remove_elem(ctx->pointers, idx);
+}
+
 AGLAPI(get_pointer_data, void *, int idx) {
     return ((agl_pointer_t)list_get_elem(ctx->pointers, idx))->data;
 }
@@ -128,16 +133,16 @@ AGLAPI(draw_triangles, void, int vertPtrId, int indPtrId) {
         vec2_t v2 = verts[((int*)indPtr->data)[i+2]];
 
         v0 = (vec2_t) {
-            .x = (int)((v0.x + 1.0f) * 0.5f * (float)ctx->buf->width),
-            .y = (int)((1.0f - v0.y) * 0.5f * (float)ctx->buf->height)
+            .x = (v0.x + 1.0f) * 0.5f * (float)ctx->buf->width,
+            .y = (1.0f - v0.y) * 0.5f * (float)ctx->buf->height
         };
         v1 = (vec2_t) {
-            .x = (int)((v1.x + 1.0f) * 0.5f * (float)ctx->buf->width),
-            .y = (int)((1.0f - v1.y) * 0.5f * (float)ctx->buf->height)
+            .x = (v1.x + 1.0f) * 0.5f * (float)ctx->buf->width,
+            .y = (1.0f - v1.y) * 0.5f * (float)ctx->buf->height
         };
         v2 = (vec2_t) {
-            .x = (int)((v2.x + 1.0f) * 0.5f * (float)ctx->buf->width),
-            .y = (int)((1.0f - v2.y) * 0.5f * (float)ctx->buf->height)
+            .x = (v2.x + 1.0f) * 0.5f * (float)ctx->buf->width,
+            .y = (1.0f - v2.y) * 0.5f * (float)ctx->buf->height
         };
 
         vec2_t l0[2] = {

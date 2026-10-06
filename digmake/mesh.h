@@ -30,3 +30,10 @@ void render_mesh(agl_context_t ctx, mesh_t mesh) {
     ctx->shader = mesh->shader;
     agl_draw_triangles(ctx, mesh->vid, mesh->iid);
 }
+
+void free_mesh(agl_context_t ctx, mesh_t mesh) {
+    agl_destroy_pointer(ctx, mesh->vid);
+    agl_destroy_pointer(ctx, mesh->iid);
+
+    free(mesh);
+}

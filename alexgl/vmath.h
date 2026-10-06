@@ -1,3 +1,5 @@
+#include <math.h>
+
 #ifndef _AGL_VMATH_H
 #define _AGL_VMATH_H
 
