@@ -109,7 +109,15 @@ vec2_t rot2(vec2_t v, float ang) {
     v.x = 5;
 }
 
-vec3_t rot3x(vec3_t v, float ang);
+vec3_t rot3x(vec3_t v, float ang) {
+    float y = v.y;
+    float z = v.z;
+
+    v.y = y*cos(ang) - z*sin(ang);
+    v.z = y*sin(ang) + z*cos(ang);
+
+    return v;
+}
 
 vec3_t rot3y(vec3_t v, float ang) {
     float x = v.x;

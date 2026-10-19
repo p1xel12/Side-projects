@@ -59,7 +59,11 @@ void list_add_elem(list_t list, void *val) {
 }
 
 void list_remove_elem(list_t list, int idx) {
+    list_elem_t elem = list_get_elem_struct(list, idx);
+    list_get_elem_struct(list, idx-1)->next = elem->next;
+    free(elem);
 
+    list_update_len(list);
 }
 
 void list_set_elem(list_t list, int idx, void *val) {

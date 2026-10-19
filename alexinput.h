@@ -52,14 +52,14 @@ input_state_t start_input() {
 }
 
 void update_input(input_state_t input) {
-    char c = getchar();
+    char c[3];
+    read(STDIN_FILENO, c, 3);
 
     memset(input->keyboard, false, 82);
-    if (c > 47 && c < 127) {
-        input->keyboard[c] = true;
-    } else if (c == '\033') {
-        getchar();
-        input->keyboard[getchar()+13] = true;
+    if (c[0] > 47 && c[0] < 127) {
+        input->keyboard[c[0]] = true;
+    } else if (c[0] == '\033') {
+        input->keyboard[c[2]+13] = true;
     }
 
     

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "vmath.h"
 #include "../list.h"
+#include "../utils.h"
 
 #ifndef _AGL_ALEXGL_H
 #define _AGL_ALEXGL_H
@@ -155,8 +156,13 @@ AGLAPI(draw_triangles, void, int vertPtrId, int indPtrId) {
             v2, v0
         };
 
-        for (int x = 0; x < ctx->buf->width; x++) {
-            for (int y = 0; y < ctx->buf->height; y++) {
+        int minx = CLAMP(MIN(v0.x, MIN(v1.x, v2.x)), 0, ctx->buf->width);
+        int miny = CLAMP(MIN(v0.y, MIN(v1.y, v2.y)), 0, ctx->buf->height);
+        int maxx = ceilf(CLAMP(MAX(v0.x, MAX(v1.x, v2.x)), 0, ctx->buf->width));
+        int maxy = ceilf(CLAMP(MAX(v0.y, MAX(v1.y, v2.y)), 0, ctx->buf->height));
+
+        for (int x = minx; x < maxx; x++) {
+            for (int y = miny; y < maxy; y++) {
                 vec2_t p = {
                     .x = x,
                     .y = y
